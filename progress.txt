@@ -1,0 +1,166 @@
+ORO – Progress Log
+=================
+
+Last updated: 2026-01-27
+Current phase: Foundation
+MVP target window: 2–3 weeks
+Primary validation goal: Can ORO reliably tell a creator what to post next?
+
+--------------------------------------------------
+HIGH-LEVEL STATUS
+--------------------------------------------------
+
+PRD:
+- [ ] Not started
+- [ ] Drafted
+- [ ] Reviewed
+- [x] Locked (canonical)
+
+Implementation plan:
+- [ ] Not started
+- [ ] Drafted
+- [x] Reviewed
+- [x] Locked
+
+--------------------------------------------------
+WEEKLY EXECUTION STATUS
+--------------------------------------------------
+
+Week 0 – Planning & Preparation
+Status: COMPLETED
+
+Completed:
+- Interviewed product requirements via Claude (detailed Q&A)
+- Aligned on MVP thesis (Decision Engine first)
+- Defined core architecture (Control Plane / Execution Plane)
+- Explicitly deferred non-MVP features to prevent scope creep
+- Drafted implementation-agnostic PRD.md
+- Drafted detailed implementation plan with tech stack and timeline
+- Established progress tracking system
+- PRD approved and locked
+- Implementation plan approved and locked
+
+--------------------------------------------------
+
+Week 1 – Foundation
+Status: IN PROGRESS
+
+Completed:
+- (none yet)
+
+In progress:
+- Initialize repo structure
+- Set up Supabase project + initial schema
+- Configure Clerk authentication
+- Deploy first empty shell to Vercel
+
+Blocked / Open questions:
+- Instagram API scope (will determine during integration)
+- TikTok API access status (will attempt, fallback to manual if unavailable)
+
+--------------------------------------------------
+CURRENT FOCUS (NEXT 48–72 HOURS)
+--------------------------------------------------
+
+1. Initialize repo structure (monorepo with Next.js + Python workers)
+2. Set up Supabase project + initial schema
+3. Configure Clerk authentication
+4. Basic layout: sidebar, main content area
+5. Deploy first empty shell to Vercel
+
+--------------------------------------------------
+MVP SCOPE SUMMARY
+--------------------------------------------------
+
+In scope:
+- Auth (email/OAuth, single user)
+- Platform connections (Instagram deep, YouTube/TikTok shallow)
+- Content sync from connected platforms
+- Manual ingestion (upload, URL import)
+- Creator DNA (onboarding, profile, goals)
+- Trend intelligence (Meta Ad Library, pattern detection)
+- Decision engine (single recommendation with reasoning)
+- Execution (script, caption, hashtag generation)
+- AI Toolkit (basic text + image gen)
+- Analytics (simple performance dashboard)
+- Credits (consumption tracking)
+
+--------------------------------------------------
+OUT OF SCOPE (INTENTIONALLY)
+--------------------------------------------------
+
+The following are explicitly deferred and should not be worked on unless PRD is amended:
+
+- Node-based editing
+- Video generation
+- Voice generation
+- Negative prompts, reference images
+- Template style presets (Cinematic, Professional, etc.)
+- Multiple outputs at once
+- Automated Creator DNA updates
+- Recommendation quality scoring
+- A/B experiment infrastructure
+- Auto-publishing / scheduled publishing
+- Cross-platform comparison charts
+- Retention curve analysis
+- Competitive benchmarking
+- Multi-user permissions / teams
+- Role-based access
+- Workspace switching
+- Stripe integration
+- Subscription tiers
+- Feature gating by tier
+- Credit purchases
+
+--------------------------------------------------
+TECH STACK (IMPLEMENTATION PLAN)
+--------------------------------------------------
+
+Frontend: Next.js 14 + TypeScript + Tailwind + shadcn/ui
+API: tRPC (Next.js API routes)
+Auth: Clerk
+Database: Supabase (Postgres)
+Queue: Inngest
+Workers: Python (Railway)
+Object Storage: Cloudflare R2
+LLM Routing: Custom (start simple, extend later)
+
+--------------------------------------------------
+NOTES / DECISIONS
+--------------------------------------------------
+
+- Quality > perceived speed
+- Async is acceptable, silent waiting is not
+- LLMs handle intelligence, not raw media processing
+- Cost-efficient models (Kimi K2.5, etc.) preferred for analysis
+- Claude/GPT reserved for creative outputs
+- Market-driven intelligence first, user-personalized second
+- Multi-tenant data model from day one (even if UI is single-user)
+- Official APIs preferred; unofficial methods are optional enrichment only
+
+--------------------------------------------------
+SECURITY CHECKLIST
+--------------------------------------------------
+
+Dependency Management:
+- [ ] Dependency approval gate: All installs require explicit human approval
+- [ ] No curl|bash or wget|bash — never pipe remote scripts to shell
+- [ ] Pin versions: Use exact versions in package.json, not ranges
+- [ ] Audit cadence: Run `pnpm audit` weekly (minimum)
+- [ ] Review postinstall scripts before allowing new dependencies
+
+Secrets:
+- [ ] Never commit .env files (gitignored)
+- [ ] Use .env.example for templates (no real values)
+- [ ] No credentials in code or comments
+
+See CLAUDE.md for full AI-assisted development policy.
+
+--------------------------------------------------
+KEY DOCUMENTS
+--------------------------------------------------
+
+- PRD.md — Product requirements (canonical product definition)
+- progress.txt — This file (execution ledger)
+- CLAUDE.md — AI development policy and dependency rules
+- Implementation plan — /Users/daniel/.claude/plans/polished-drifting-jellyfish.md
