@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileVideo, Upload, Link2 } from "lucide-react"

@@ -1,7 +1,7 @@
 ORO – Progress Log
 =================
 
-Last updated: 2026-01-27
+Last updated: 2026-01-28
 Current phase: Foundation
 MVP target window: 2–3 weeks
 Primary validation goal: Can ORO reliably tell a creator what to post next?
@@ -46,15 +46,43 @@ Week 1 – Foundation
 Status: IN PROGRESS
 
 Completed:
-- (none yet)
+- Initialized monorepo structure (apps/web, packages/db, workers/)
+- Set up Next.js 14 with TypeScript, Tailwind, App Router
+- Installed and configured shadcn/ui with dark mode (default)
+- Created dashboard layout with sidebar navigation
+- Built placeholder pages for all routes:
+  - / (Decision Engine - main page)
+  - /analytics
+  - /content
+  - /connections
+  - /toolkit
+  - /settings
+- Created full database schema (0001_initial_schema.sql):
+  - Organizations (multi-tenant)
+  - Users
+  - PlatformConnections
+  - CreatorDNA
+  - Content
+  - TrendPatterns
+  - Recommendations
+  - Jobs
+  - CreditLedger
+- Created TypeScript types for all database entities (packages/db/types.ts)
+- Set up Supabase client (browser + server)
+- Installed and configured Clerk authentication
+- Created sign-in/sign-up pages
+- Updated sidebar with Clerk user info and sign-out
+- Created .env.example with all required variables
+- Build passes without credentials (graceful degradation)
 
 In progress:
-- Initialize repo structure
-- Set up Supabase project + initial schema
-- Configure Clerk authentication
-- Deploy first empty shell to Vercel
+- Deploy to Vercel
+- Connect real Supabase project
+- Connect real Clerk project
 
 Blocked / Open questions:
+- Need to create Supabase project and run migration
+- Need to create Clerk project and get keys
 - Instagram API scope (will determine during integration)
 - TikTok API access status (will attempt, fallback to manual if unavailable)
 
@@ -62,11 +90,11 @@ Blocked / Open questions:
 CURRENT FOCUS (NEXT 48–72 HOURS)
 --------------------------------------------------
 
-1. Initialize repo structure (monorepo with Next.js + Python workers)
-2. Set up Supabase project + initial schema
-3. Configure Clerk authentication
-4. Basic layout: sidebar, main content area
-5. Deploy first empty shell to Vercel
+1. Create Supabase project and run initial migration
+2. Create Clerk project and configure OAuth
+3. Deploy to Vercel
+4. Test auth flow end-to-end
+5. Begin platform OAuth integrations (Instagram first)
 
 --------------------------------------------------
 MVP SCOPE SUMMARY
