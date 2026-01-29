@@ -3,10 +3,11 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Define public routes that don't require authentication
+// Note: tRPC handles its own auth through context, so API routes are public at middleware level
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
-  '/api/webhooks(.*)',
+  '/api(.*)',
 ])
 
 // Check if Clerk is configured
