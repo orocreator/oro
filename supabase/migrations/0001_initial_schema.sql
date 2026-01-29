@@ -2,15 +2,15 @@
 -- Version: 1.0
 -- Aligned with PRD v1.0
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enable UUID extension (Supabase uses pgcrypto by default)
+-- gen_random_uuid() is available without extension in Postgres 13+
 
 -- ============================================
 -- ORGANIZATIONS (Multi-tenant foundation)
 -- ============================================
 -- PRD: "Multi-tenant from day one"
 CREATE TABLE organizations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE,
     credit_balance INTEGER NOT NULL DEFAULT 1000,
@@ -23,7 +23,7 @@ CREATE TABLE organizations (
 -- USERS
 -- ============================================
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     clerk_id VARCHAR(255) UNIQUE, -- Clerk authentication ID
     email VARCHAR(255) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TYPE platform_type AS ENUM ('instagram', 'youtube', 'tiktok');
 CREATE TYPE connection_status AS ENUM ('connected', 'disconnected', 'error', 'pending');
 
 CREATE TABLE platform_connections (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     platform platform_type NOT NULL,
     account_id VARCHAR(255), -- Platform-specific account ID
@@ -72,7 +72,7 @@ CREATE INDEX idx_platform_connections_platform ON platform_connections(platform)
 -- ============================================
 -- PRD Pillar 1: "A persistent, evolving profile that learns"
 CREATE TABLE creator_dna (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID UNIQUE NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
     -- Explicit inputs (onboarding)
@@ -107,7 +107,7 @@ CREATE TYPE content_type AS ENUM ('video', 'image', 'carousel', 'text', 'story',
 CREATE TYPE content_source AS ENUM ('synced', 'uploaded', 'url_import', 'generated');
 
 CREATE TABLE content (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     platform_connection_id UUID REFERENCES platform_connections(id) ON DELETE SET NULL,
 
@@ -156,7 +156,7 @@ CREATE INDEX idx_content_platform_connection_id ON content(platform_connection_i
 -- ============================================
 -- PRD: "Market-driven first, user-personalized second"
 CREATE TABLE trend_patterns (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     platform platform_type NOT NULL,
     category VARCHAR(255), -- e.g., "day_in_life", "tutorial", "hook_style"
@@ -194,7 +194,7 @@ CREATE INDEX idx_trend_patterns_confidence ON trend_patterns(confidence_score DE
 CREATE TYPE recommendation_status AS ENUM ('pending', 'accepted', 'modified', 'rejected', 'published');
 
 CREATE TABLE recommendations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
     -- What we recommend
@@ -253,7 +253,7 @@ CREATE TYPE workflow_type AS ENUM (
 );
 
 CREATE TABLE jobs (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
     workflow_type workflow_type NOT NULL,
@@ -306,7 +306,7 @@ CREATE INDEX idx_jobs_queued ON jobs(status, priority DESC, queued_at ASC) WHERE
 CREATE TYPE credit_transaction_type AS ENUM ('grant', 'purchase', 'consumption', 'refund', 'adjustment');
 
 CREATE TABLE credit_ledger (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
     amount INTEGER NOT NULL, -- Positive for additions, negative for consumption
