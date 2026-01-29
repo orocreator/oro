@@ -1,7 +1,7 @@
 ORO – Progress Log
 =================
 
-Last updated: 2026-01-28
+Last updated: 2026-01-29
 Current phase: Foundation
 MVP target window: 2–3 weeks
 Primary validation goal: Can ORO reliably tell a creator what to post next?
@@ -74,15 +74,28 @@ Completed:
 - Updated sidebar with Clerk user info and sign-out
 - Created .env.example with all required variables
 - Build passes without credentials (graceful degradation)
+- Set up tRPC API layer with all routers:
+  - user (getOrCreate, current, update)
+  - creatorDna (get, upsert, updatePatterns, updateKnowledge)
+  - platformConnection (list, get, storeTokens, disconnect, updateStatus, summary)
+  - content (list, get, create, update, delete, sync)
+  - recommendation (current, get, list, accept, acceptWithModifications, reject, markPublished, create, stats)
+  - credits (balance, history, consume, canAfford, grant, usageSummary)
+  - trends (list, listFiltered, get, categories, create, update, summary)
+- Created tRPC client and provider for frontend
+- Configured middleware for protected routes
+- Configured .env.local with Clerk and Supabase credentials
+- Added GitHub remote (https://github.com/orocreator/oro.git)
+- Dev server running and API endpoints responding
+- Build passes with all credentials
 
 In progress:
+- Run database migration in Supabase SQL Editor
+- Push code to GitHub (need to fix credential configuration)
 - Deploy to Vercel
-- Connect real Supabase project
-- Connect real Clerk project
 
 Blocked / Open questions:
-- Need to create Supabase project and run migration
-- Need to create Clerk project and get keys
+- GitHub push failing (cached credentials for different account)
 - Instagram API scope (will determine during integration)
 - TikTok API access status (will attempt, fallback to manual if unavailable)
 
@@ -90,10 +103,10 @@ Blocked / Open questions:
 CURRENT FOCUS (NEXT 48–72 HOURS)
 --------------------------------------------------
 
-1. Create Supabase project and run initial migration
-2. Create Clerk project and configure OAuth
+1. Run database migration in Supabase SQL Editor (copy/paste from supabase/migrations/0001_initial_schema.sql)
+2. Fix GitHub credentials and push code
 3. Deploy to Vercel
-4. Test auth flow end-to-end
+4. Test full auth flow end-to-end
 5. Begin platform OAuth integrations (Instagram first)
 
 --------------------------------------------------
