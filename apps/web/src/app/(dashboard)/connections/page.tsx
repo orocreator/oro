@@ -1,38 +1,53 @@
 export const dynamic = 'force-dynamic'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Instagram, Youtube, Music2, Plus } from "lucide-react"
+import { Instagram, Youtube, Music2, CheckCircle2, AlertCircle } from "lucide-react"
+import { ConnectionCard } from "./connection-card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 const platforms = [
   {
-    id: "instagram",
+    id: "instagram" as const,
     name: "Instagram",
     icon: Instagram,
     description: "Reels, Stories, Carousels",
     color: "text-pink-500",
+    bgColor: "bg-pink-500/10",
     status: "primary",
+    oauthUrl: "/api/auth/instagram",
   },
   {
-    id: "youtube",
+    id: "youtube" as const,
     name: "YouTube",
     icon: Youtube,
     description: "Videos, Shorts, Analytics",
     color: "text-red-500",
+    bgColor: "bg-red-500/10",
     status: "supported",
+    oauthUrl: "/api/auth/youtube", // TODO: implement
   },
   {
-    id: "tiktok",
+    id: "tiktok" as const,
     name: "TikTok",
     icon: Music2,
     description: "Short-form videos",
     color: "text-cyan-500",
+    bgColor: "bg-cyan-500/10",
     status: "supported",
+    oauthUrl: "/api/auth/tiktok", // TODO: implement
   },
 ]
 
-export default function ConnectionsPage() {
+interface ConnectionsPageProps {
+  searchParams: Promise<{ success?: string; error?: string }>
+}
+
+export default async function ConnectionsPage({ searchParams }: ConnectionsPageProps) {
+  const params = await searchParams
+  const successMessage = params.success
+  const errorMessage = params.error
+
   return (
     <div className="space-y-8">
       <div>
@@ -42,34 +57,30 @@ export default function ConnectionsPage() {
         </p>
       </div>
 
+      {successMessage && (
+        <Alert className="border-green-500/50 bg-green-500/10">
+          <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <AlertDescription className="text-green-500">
+            {successMessage}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {errorMessage && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {errorMessage}
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid gap-4 md:grid-cols-3">
         {platforms.map((platform) => (
-          <Card key={platform.id} className="relative">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-muted ${platform.color}`}>
-                    <platform.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-base">{platform.name}</CardTitle>
-                    <CardDescription className="text-xs">
-                      {platform.description}
-                    </CardDescription>
-                  </div>
-                </div>
-                {platform.status === "primary" && (
-                  <Badge variant="secondary" className="text-xs">Primary</Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Connect
-              </Button>
-            </CardContent>
-          </Card>
+          <ConnectionCard
+            key={platform.id}
+            platform={platform}
+          />
         ))}
       </div>
 
@@ -82,6 +93,27 @@ export default function ConnectionsPage() {
           <p>• <strong>Build Creator DNA</strong> — learn what works for you specifically</p>
           <p>• <strong>Smarter recommendations</strong> — decisions based on your actual performance</p>
           <p>• <strong>Cross-platform insights</strong> — see how content performs everywhere</p>
+        </CardContent>
+      </Card>
+
+      <Card className="border-amber-500/50 bg-amber-500/5">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-amber-500" />
+            Setup Required
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground space-y-2">
+          <p>To enable Instagram connection, you need to:</p>
+          <ol className="list-decimal list-inside space-y-1 ml-2">
+            <li>Create a Meta Developer app at developers.facebook.com</li>
+            <li>Add Instagram Graph API product</li>
+            <li>Configure OAuth redirect URI</li>
+            <li>Submit for App Review (24-48 hours)</li>
+          </ol>
+          <p className="text-xs mt-4">
+            Environment variables needed: <code className="bg-muted px-1 rounded">INSTAGRAM_APP_ID</code> and <code className="bg-muted px-1 rounded">INSTAGRAM_APP_SECRET</code>
+          </p>
         </CardContent>
       </Card>
     </div>
